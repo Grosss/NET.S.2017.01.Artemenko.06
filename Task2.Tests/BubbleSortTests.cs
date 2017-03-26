@@ -135,5 +135,41 @@ namespace Task2.Tests
 
             Assert.AreEqual(expected, actual);
         }
+
+        [TestCase(null)]
+        public void SortBySumAsc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
+        {
+            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortBySumAsc(jaggedArray));
+        }
+
+        [TestCase(null)]
+        public void SortByMaxAsc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
+        {
+            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortByMaxAsc(jaggedArray));
+        }
+
+        [TestCase(null)]
+        public void SortByMinAsc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
+        {
+            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortByMinAsc(jaggedArray));
+        }
+
+        [TestCase(null)]
+        public void SortBySumDesc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
+        {
+            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortBySumDesc(jaggedArray));
+        }
+
+        [TestCase(null)]
+        public void SortByMaxDesc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
+        {
+            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortByMaxDesc(jaggedArray));
+        }
+
+        [TestCase(null)]
+        public void SortByMinDesc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
+        {
+            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortByMinDesc(jaggedArray));
+        }
     }
 }

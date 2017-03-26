@@ -10,6 +10,9 @@ namespace Task2
     {
         public static void SortBySumAsc(int[][] jaggedArray)
         {
+            if (jaggedArray == null)
+                throw new ArgumentNullException();
+
             for (int i = 0; i < jaggedArray.Length; i++)
             {
                 for (int j = 0; j < jaggedArray.Length - i - 1; j++)
@@ -22,6 +25,9 @@ namespace Task2
 
         public static void SortByMaxAsc(int[][] jaggedArray)
         {
+            if (jaggedArray == null)
+                throw new ArgumentNullException();
+
             for (int i = 0; i < jaggedArray.Length; i++)
             {
                 for (int j = 0; j < jaggedArray.Length - i - 1; j++)
@@ -34,6 +40,9 @@ namespace Task2
 
         public static void SortByMinAsc(int[][] jaggedArray)
         {
+            if (jaggedArray == null)
+                throw new ArgumentNullException();
+
             for (int i = 0; i < jaggedArray.Length; i++)
             {
                 for (int j = 0; j < jaggedArray.Length - i - 1; j++)
@@ -46,6 +55,9 @@ namespace Task2
 
         public static void SortBySumDesc(int[][] jaggedArray)
         {
+            if (jaggedArray == null)
+                throw new ArgumentNullException();
+
             for (int i = 0; i < jaggedArray.Length; i++)
             {
                 for (int j = 0; j < jaggedArray.Length - i - 1; j++)
@@ -58,6 +70,9 @@ namespace Task2
 
         public static void SortByMaxDesc(int[][] jaggedArray)
         {
+            if (jaggedArray == null)
+                throw new ArgumentNullException();
+
             for (int i = 0; i < jaggedArray.Length; i++)
             {
                 for (int j = 0; j < jaggedArray.Length - i - 1; j++)
@@ -70,6 +85,9 @@ namespace Task2
 
         public static void SortByMinDesc(int[][] jaggedArray)
         {
+            if (jaggedArray == null)
+                throw new ArgumentNullException();
+
             for (int i = 0; i < jaggedArray.Length; i++)
             {
                 for (int j = 0; j < jaggedArray.Length - i - 1; j++)
