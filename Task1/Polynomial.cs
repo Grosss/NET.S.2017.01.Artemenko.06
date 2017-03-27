@@ -21,31 +21,36 @@ namespace Task1
 
         #region Constructors
 
-        Polynomial(double firstCoeff)
+        public Polynomial()
+        {
+            this.coefficients = new double[] { };
+        }
+
+        public Polynomial(double firstCoeff)
         {
             this.coefficients = new double[] { firstCoeff };
         }
 
-        Polynomial(double firstCoeff, double secondCoeff)
+        public Polynomial(double firstCoeff, double secondCoeff)
         {
             this.coefficients = new double[] { firstCoeff, secondCoeff };
         }
 
-        Polynomial(double firstCoeff, double secondCoeff, double thirdCoeff)
+        public Polynomial(double firstCoeff, double secondCoeff, double thirdCoeff)
         {
             this.coefficients = new double[] { firstCoeff, secondCoeff, thirdCoeff };
         }
 
-        Polynomial(params double[] coefficients)
+        public Polynomial(params double[] coeffs)
         {
-            if (coefficients == null)
+            if (coeffs == null)
                 throw new ArgumentNullException();
 
-            if (coefficients.Length == 0)
+            if (coeffs.Length == 0)
                 throw new ArgumentException();
 
-            this.coefficients = new double[coefficients.Length];
-            Array.Copy(coefficients, this.coefficients, coefficients.Length);
+            this.coefficients = new double[coeffs.Length];
+            Array.Copy(coeffs, coefficients, coeffs.Length);
         }
 
         #endregion
@@ -101,6 +106,9 @@ namespace Task1
             if (ReferenceEquals(this, polynom))
                 return true;
 
+            if (ReferenceEquals(null, polynom))
+                return false;
+
             if (coefficients.Length != polynom.coefficients.Length)
                 return false;
 
@@ -118,10 +126,10 @@ namespace Task1
 
         public static bool operator ==(Polynomial polynom1, Polynomial polynom2)
         {
-            if (polynom1 == null && polynom2 == null)
+            if (ReferenceEquals(polynom1, null) && ReferenceEquals(polynom2, null))
                 return true;
 
-            if (polynom1 == null || polynom2 == null)
+            if (ReferenceEquals(polynom1, null) || ReferenceEquals(polynom2, null))
                 return false;
 
             return polynom1.Equals(polynom2);
