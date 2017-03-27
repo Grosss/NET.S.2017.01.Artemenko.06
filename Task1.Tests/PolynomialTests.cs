@@ -83,6 +83,25 @@ namespace Task1.Tests
             return new Polynomial(firstCoeffs) != new Polynomial(secondCoeffs);
         }
 
+        [TestCase(new double[] { 1, 2, 3 }, new double[] { 1, 2, 3, 4 }, ExpectedResult = new double[] { 2, 4, 6, 4 })]
+        [TestCase(new double[] { 2, 4, 5 }, new double[] { 12, 4 }, ExpectedResult = new double[] { 14, 8, 5 })]
+        public double[] OperatorAdd_AddTwoPolynoms_ExpectedPositiveTest(double[] firstCoeffs, double[] secondCoeffs)
+        {
+            return (new Polynomial(firstCoeffs) + new Polynomial(secondCoeffs)).Coefficients;
+        }
 
+        [TestCase(new double[] { 3, 5, 4, 4, 7 }, new double[] { 1, 2, 3, 4 }, ExpectedResult = new double[] { 2, 3, 1, 0, 7 })]
+        [TestCase(new double[] { 2, 4, 5 }, new double[] { 9, 4, 2, 10 }, ExpectedResult = new double[] { -7, 0, 3, -10 })]
+        public double[] OperatorSub_SubtractTwoPolynoms_ExpectedPositiveTest(double[] firstCoeffs, double[] secondCoeffs)
+        {
+            return (new Polynomial(firstCoeffs) - new Polynomial(secondCoeffs)).Coefficients;
+        }
+
+        [TestCase(new double[] { 2, 1 }, new double[] { 7, 4 }, ExpectedResult = new double[] { })]
+        [TestCase(new double[] { 2, 0, 5 }, new double[] { 7, 4 }, ExpectedResult = new double[] {  })]
+        public double[] OperatorMul_MultiplyTwoPolynoms_ExpectedPositiveTest(double[] firstCoeffs, double[] secondCoeffs)
+        {
+            return (new Polynomial(firstCoeffs) * new Polynomial(secondCoeffs)).Coefficients;
+        }
     }
 }
