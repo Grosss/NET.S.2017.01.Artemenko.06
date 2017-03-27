@@ -96,8 +96,6 @@ namespace Task1
             return Equals(item);
         }
 
-        #endregion
-
         public bool Equals(Polynomial polynom)
         {
             if (ReferenceEquals(this, polynom))
@@ -114,6 +112,10 @@ namespace Task1
             return true;
         }
 
+        #endregion
+
+        #region Overloaded operators
+
         public static bool operator ==(Polynomial polynom1, Polynomial polynom2)
         {
             if (polynom1 == null && polynom2 == null)
@@ -128,6 +130,98 @@ namespace Task1
         public static bool operator !=(Polynomial polynom1, Polynomial polynom2)
         {
             return !(polynom1 == polynom2);
+        }
+
+        public static Polynomial operator +(Polynomial polynom1, Polynomial polynom2)
+        {
+            if (polynom1 == null || polynom2 == null)
+                throw new ArgumentNullException();
+
+            double[] result;
+            if (polynom1.coefficients.Length > polynom2.coefficients.Length)
+            {
+                result = new double[polynom1.coefficients.Length];
+                Array.Copy(polynom1.coefficients, result, polynom1.coefficients.Length);
+                for (int i = 0; i < polynom2.coefficients.Length; i++)
+                {
+                    result[i] += polynom2.coefficients[i];
+                }
+            }
+            else
+            {
+                result = new double[polynom2.coefficients.Length];
+                Array.Copy(polynom2.coefficients, result, polynom2.coefficients.Length);
+                for (int i = 0; i < polynom1.coefficients.Length; i++)
+                {
+                    result[i] += polynom1.coefficients[i];
+                }
+                
+            }
+            return new Polynomial(result);
+        }
+
+        public static Polynomial operator -(Polynomial polynom1, Polynomial polynom2)
+        {
+            if (polynom1 == null || polynom2 == null)
+                throw new ArgumentNullException();
+            
+            double[] result;
+            if (polynom2.coefficients.Length > polynom1.coefficients.Length)
+            {
+                result = new double[polynom2.coefficients.Length];
+                Array.Copy(polynom1.coefficients, result, polynom1.coefficients.Length);
+                for (int i = 0; i < polynom2.coefficients.Length; i++)
+                {
+                    result[i] -= polynom2.coefficients[i];
+                }
+            }
+            else
+            {
+                result = new double[polynom1.coefficients.Length];
+                Array.Copy(polynom1.coefficients, result, polynom1.coefficients.Length);
+                for (int i = 0; i < polynom2.coefficients.Length; i++)
+                {
+                    result[i] -= polynom2.coefficients[i];
+                }
+
+            }
+            return new Polynomial(result);
+        }
+
+        public static Polynomial operator *(Polynomial polynom1, Polynomial polynom2)
+        {
+            if (polynom1 == null || polynom2 == null)
+                throw new ArgumentNullException();
+
+            double[] result = 
+                new double[polynom1.coefficients.Length + polynom2.coefficients.Length - 1];
+
+            for (int i = 0; i < polynom1.coefficients.Length; i++)
+            {
+                for (int j = 0; j < polynom2.coefficients.Length; j++)
+                {
+                    result[i + j] += polynom1.coefficients[i] * polynom2.coefficients[j];
+                }
+            }
+
+            return new Polynomial(result);
+        }
+
+        #endregion
+
+        public static Polynomial Add(Polynomial polynom1, Polynomial polynom2)
+        {
+            return polynom1 + polynom2;
+        }
+
+        public static Polynomial Subtract(Polynomial polynom1, Polynomial polynom2)
+        {
+            return polynom1 - polynom2;
+        }
+
+        public static Polynomial Multiply(Polynomial polynom1, Polynomial polynom2)
+        {
+            return polynom1 * polynom2;
         }
     }
 }
