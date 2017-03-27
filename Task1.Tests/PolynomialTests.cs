@@ -12,23 +12,35 @@ namespace Task1.Tests
     {
 
         [Test]
-        public void Polinome_SumTest()
+        public void Add_PassedTwoPolynoms_ExpectedPositiveTest()
         {
-            Polynomial pol1 = new Polynomial(1, 2, 3);
-            Polynomial pol2 = new Polynomial(1, 2, 3, 4);
+            Polynomial polynom1 = new Polynomial(1, 2, 3);
+            Polynomial polynom2 = new Polynomial(1, 2, 3, 4);
 
             Polynomial expected = new Polynomial(2, 4, 6, 4);
 
-            Polynomial result = pol1 + pol2;
+            Polynomial result = polynom1 + polynom2;
 
             Assert.AreEqual(expected, result);
+        }
+        
+        [TestCase(null)]
+        public void Constructor_PassedNullReference_ThrowsArgumentNullException(double[] coeffs)
+        {
+            Assert.Throws<ArgumentNullException>(() => new Polynomial(coeffs));
+        }
+
+        [TestCase(new double[] { })]
+        public void Constructor_PassedEmptyArray_ThrowsArgumentException(double[] coeffs)
+        {
+            Assert.Throws<ArgumentException>(() => new Polynomial(coeffs));
         }
 
         [TestCase(new double[] { 12, 53, 2 }, ExpectedResult = "12 + 53*x^1 + 2*x^2")]
         [TestCase(new double[] { 12, 9, -3, 4 }, ExpectedResult = "12 + 9*x^1 - 3*x^2 + 4*x^3")]
-        public string ToString_PassedPolynom_ExpectedPositiveTest(double[] Coeffs)
+        public string ToString_PassedPolynom_ExpectedPositiveTest(double[] coeffs)
         {
-            var polynom1 = new Polynomial(Coeffs);
+            var polynom1 = new Polynomial(coeffs);
             return polynom1.ToString();
         }
 
