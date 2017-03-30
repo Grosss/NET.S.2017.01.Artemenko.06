@@ -7,11 +7,67 @@ using System.Threading.Tasks;
 
 namespace Task2.Tests
 {
+    public class AscSumComparer : ICustomComparer
+    {
+        public int Compare(int[] array1, int[] array2)
+        {
+            if (ReferenceEquals(array1, null))
+                return -1;
+
+            if (ReferenceEquals(array2, null))
+                return 1;
+
+            return array1.Sum() - array2.Sum();
+        }
+    }
+
+    public class DescSumComparer : ICustomComparer
+    {
+        public int Compare(int[] array1, int[] array2)
+        {
+            if (ReferenceEquals(array2, null))
+                return -1;
+
+            if (ReferenceEquals(array1, null))
+                return 1;
+
+            return array2.Sum() - array1.Sum();
+        }
+    }
+
+    public class AscMaxComparer : ICustomComparer
+    {
+        public int Compare(int[] array1, int[] array2)
+        {
+            if (ReferenceEquals(array1, null))
+                return -1;
+
+            if (ReferenceEquals(array2, null))
+                return 1;
+
+            return array1.Max() - array2.Max();
+        }
+    }
+
+    public class DescMaxComparer : ICustomComparer
+    {
+        public int Compare(int[] array1, int[] array2)
+        {
+            if (ReferenceEquals(array2, null))
+                return -1;
+
+            if (ReferenceEquals(array1, null))
+                return 1;
+
+            return array2.Max() - array1.Max();
+        }
+    }
+
     [TestFixture]
     public class BubbleSortTests
     {
         [Test]
-        public void SortBySumAsc_PassedJaggedArray_ExpectedSortedBySumOfRowsArray()
+        public void Sort_PassedJaggedArrayAndAscSumComparerObject_ExpectedAscSortedBySumOfRowsArray()
         {
             int[][] actual = {
                 new int[] { 1, 2, 4, 5 },
@@ -26,13 +82,34 @@ namespace Task2.Tests
                 new int[] { 7, 12, 31 }                
             };
 
-            BubbleSort.SortBySumAsc(actual);
+            BubbleSort.Sort(actual, new AscSumComparer());
 
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void SortByMaxAsc_PassedJaggedArray_ExpectedSortedByMaxElementsOfRowsArray()
+        public void Sort_PassedJaggedArrayAndDescSumComparerObject_ExpectedDescSortedBySumOfRowsArray()
+        {
+            int[][] actual = {
+                new int[] { 1, 2, 4, 5 },
+                new int[] { 7, 12, 31 },
+                new int[] { 35, 2, 2, 3, 2 },
+                new int[] { 8, 13, 1, 9 }
+            };
+            int[][] expected = {           
+                new int[] { 7, 12, 31 },
+                new int[] { 35, 2, 2, 3, 2 },
+                new int[] { 8, 13, 1, 9 },
+                new int[] { 1, 2, 4, 5 }
+            };
+
+            BubbleSort.Sort(actual, new DescSumComparer());
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void Sort_PassedJaggedArrayAndAscMaxComparerObject_ExpectedAscSortedByMaxElementsOfRowsArray()
         {
             int[][] actual = {
                 new int[] { 1, 2, 4, 5 },
@@ -44,58 +121,16 @@ namespace Task2.Tests
                 new int[] { 1, 2, 4, 5 },
                 new int[] { 8, 13, 1, 9 },
                 new int[] { 7, 12, 31 },
-                new int[] { 35, 2, 2, 3, 2 }                
+                new int[] { 35, 2, 2, 3, 2 }
             };
 
-            BubbleSort.SortByMaxAsc(actual);
+            BubbleSort.Sort(actual, new AscMaxComparer());
 
             Assert.AreEqual(expected, actual);
-        }
+        }              
 
         [Test]
-        public void SortByMinAsc_PassedJaggedArray_ExpectedSortedByMinElementsOfRowsArray()
-        {
-            int[][] actual = {
-                new int[] { 1, 2, 4, 5 },
-                new int[] { 7, 12, 31 },
-                new int[] { 35, 2, 2, 3, 2 },
-                new int[] { 8, 13, 1, 9 }
-            };
-            int[][] expected = {
-                new int[] { 1, 2, 4, 5 },
-                new int[] { 8, 13, 1, 9 },
-                new int[] { 35, 2, 2, 3, 2 },
-                new int[] { 7, 12, 31 }
-            };
-
-            BubbleSort.SortByMinAsc(actual);
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void SortBySumDesc_PassedJaggedArray_ExpectedSortedBySumOfRowsArray()
-        {
-            int[][] actual = {
-                new int[] { 1, 2, 4, 5 },
-                new int[] { 7, 12, 31 },
-                new int[] { 35, 2, 2, 3, 2 },
-                new int[] { 8, 13, 1, 9 }
-            };
-            int[][] expected = {
-                new int[] { 7, 12, 31 },
-                new int[] { 35, 2, 2, 3, 2 },
-                new int[] { 8, 13, 1, 9 },
-                new int[] { 1, 2, 4, 5 }           
-            };
-
-            BubbleSort.SortBySumDesc(actual);
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void SortByMaxDesc_PassedJaggedArray_ExpectedSortedByMaxElementsOfRowsArray()
+        public void Sort_PassedJaggedArrayAndDescMaxComparerObject_ExpectedDescSortedByMaxElementsOfRowsArray()
         {
             int[][] actual = {
                 new int[] { 1, 2, 4, 5 },
@@ -107,69 +142,18 @@ namespace Task2.Tests
                 new int[] { 35, 2, 2, 3, 2 },
                 new int[] { 7, 12, 31 },
                 new int[] { 8, 13, 1, 9 },
-                new int[] { 1, 2, 4, 5 },         
+                new int[] { 1, 2, 4, 5 }
             };
 
-            BubbleSort.SortByMaxDesc(actual);
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void SortByMinDesc_PassedJaggedArray_ExpectedSortedByMinElementsOfRowsArray()
-        {
-            int[][] actual = {
-                new int[] { 1, 2, 4, 5 },
-                new int[] { 7, 12, 31 },
-                new int[] { 35, 2, 2, 3, 2 },
-                new int[] { 8, 13, 1, 9 }
-            };
-            int[][] expected = {
-                new int[] { 7, 12, 31 },
-                new int[] { 35, 2, 2, 3, 2 },
-                new int[] { 1, 2, 4, 5 },
-                new int[] { 8, 13, 1, 9 }
-            };
-
-            BubbleSort.SortByMinDesc(actual);
+            BubbleSort.Sort(actual, new DescMaxComparer());
 
             Assert.AreEqual(expected, actual);
         }
 
         [TestCase(null)]
-        public void SortBySumAsc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
+        public void Sort_PassedNullReference_ThrowsArgumentNullException(int[][] jaggedArray)
         {
-            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortBySumAsc(jaggedArray));
-        }
-
-        [TestCase(null)]
-        public void SortByMaxAsc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
-        {
-            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortByMaxAsc(jaggedArray));
-        }
-
-        [TestCase(null)]
-        public void SortByMinAsc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
-        {
-            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortByMinAsc(jaggedArray));
-        }
-
-        [TestCase(null)]
-        public void SortBySumDesc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
-        {
-            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortBySumDesc(jaggedArray));
-        }
-
-        [TestCase(null)]
-        public void SortByMaxDesc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
-        {
-            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortByMaxDesc(jaggedArray));
-        }
-
-        [TestCase(null)]
-        public void SortByMinDesc_PassedJaggedArray_ThrowsArgumentNullException(int[][] jaggedArray)
-        {
-            Assert.Throws<ArgumentNullException>(() => BubbleSort.SortByMinDesc(jaggedArray));
+            Assert.Throws<ArgumentNullException>(() => BubbleSort.Sort(jaggedArray, new AscSumComparer()));
         }
     }
 }
