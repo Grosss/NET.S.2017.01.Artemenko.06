@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Task1
 {
-    public class Polynomial
+    public sealed class Polynomial : ICloneable
     {
         private readonly double[] coefficients;
+        private readonly int degree;
+        private static readonly double epsilon;
         public double[] Coefficients
         {
             get
@@ -18,27 +21,12 @@ namespace Task1
                 return polynomCoeffs;
             }
         }
-
+        public int Degree { get { return degree; } }
         #region Constructors
-
-        public Polynomial()
+        
+        static Polynomial()
         {
-            this.coefficients = new double[] { };
-        }
-
-        public Polynomial(double firstCoeff)
-        {
-            this.coefficients = new double[] { firstCoeff };
-        }
-
-        public Polynomial(double firstCoeff, double secondCoeff)
-        {
-            this.coefficients = new double[] { firstCoeff, secondCoeff };
-        }
-
-        public Polynomial(double firstCoeff, double secondCoeff, double thirdCoeff)
-        {
-            this.coefficients = new double[] { firstCoeff, secondCoeff, thirdCoeff };
+            epsilon = 0.0000001d;
         }
 
         public Polynomial(params double[] coeffs)
@@ -49,8 +37,25 @@ namespace Task1
             if (coeffs.Length == 0)
                 throw new ArgumentException();
 
-            this.coefficients = new double[coeffs.Length];
-            Array.Copy(coeffs, coefficients, coeffs.Length);
+            for (int i = 0; i < coeffs.Length; i++)
+            {
+                if (Math.Abs(coeffs[i]) < epsilon)
+                {
+                    coeffs[i] = 0.0;
+                }
+            }
+
+            for (int i = coeffs.Length - 1; i > -1; i--)
+            {
+                if (coeffs[i] != 0.0)
+                {
+                    degree = i;
+                    break;
+                }
+            }
+
+            this.coefficients = new double[degree + 1];
+            Array.Copy(coeffs, coefficients, degree + 1);
         }
 
         #endregion
@@ -92,13 +97,17 @@ namespace Task1
         }
 
         public override bool Equals(object obj)
-        {
-            var item = obj as Polynomial;
+        {        
+            if (ReferenceEquals(this, obj))
+                return true;
 
-            if (ReferenceEquals(item, null))
+            if (ReferenceEquals(null, obj))
                 return false;
 
-            return Equals(item);
+            if (this.GetType() != obj.GetType())
+                return false;
+            
+            return Equals((Polynomial)obj);
         }
 
         public bool Equals(Polynomial polynom)
@@ -121,94 +130,86 @@ namespace Task1
         }
 
         #endregion
+        
+        #region Interface Implementation
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        public Polynomial Clone()
+        {
+            return new Polynomial(coefficients);
+        }
+
+        #endregion
 
         #region Overloaded operators
 
-        public static bool operator ==(Polynomial polynom1, Polynomial polynom2)
+        public static bool operator ==(Polynomial lhs, Polynomial rhs)
         {
-            if (ReferenceEquals(polynom1, null) && ReferenceEquals(polynom2, null))
+            if (ReferenceEquals(lhs, null) && ReferenceEquals(rhs, null))
                 return true;
 
-            if (ReferenceEquals(polynom1, null) || ReferenceEquals(polynom2, null))
+            if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
                 return false;
 
-            return polynom1.Equals(polynom2);
+            return lhs.Equals(rhs);
         }
 
-        public static bool operator !=(Polynomial polynom1, Polynomial polynom2)
+        public static bool operator !=(Polynomial lhs, Polynomial rhs)
         {
-            return !(polynom1 == polynom2);
+            return !(lhs == rhs);
         }
 
-        public static Polynomial operator +(Polynomial polynom1, Polynomial polynom2)
+        public static Polynomial operator -(Polynomial polynom)
         {
-            if (polynom1 == null || polynom2 == null)
-                throw new ArgumentNullException();
-
-            double[] result;
-            if (polynom1.coefficients.Length > polynom2.coefficients.Length)
-            {
-                result = new double[polynom1.coefficients.Length];
-                Array.Copy(polynom1.coefficients, result, polynom1.coefficients.Length);
-                for (int i = 0; i < polynom2.coefficients.Length; i++)
-                {
-                    result[i] += polynom2.coefficients[i];
-                }
-            }
-            else
-            {
-                result = new double[polynom2.coefficients.Length];
-                Array.Copy(polynom2.coefficients, result, polynom2.coefficients.Length);
-                for (int i = 0; i < polynom1.coefficients.Length; i++)
-                {
-                    result[i] += polynom1.coefficients[i];
-                }
-                
-            }
-            return new Polynomial(result);
+            double[] resCoeffs = new double[polynom.coefficients.Length];
+            for (int i = 0; i < polynom.coefficients.Length; i++)
+                resCoeffs[i] = -polynom.coefficients[i];
+            Polynomial resPolynom = new Polynomial(resCoeffs);
+            return resPolynom;
         }
 
-        public static Polynomial operator -(Polynomial polynom1, Polynomial polynom2)
+        public static Polynomial operator +(Polynomial lhs, Polynomial rhs)
         {
-            if (polynom1 == null || polynom2 == null)
+            if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
                 throw new ArgumentNullException();
             
-            double[] result;
-            if (polynom2.coefficients.Length > polynom1.coefficients.Length)
+            if (lhs.coefficients.Length < rhs.coefficients.Length)
             {
-                result = new double[polynom2.coefficients.Length];
-                Array.Copy(polynom1.coefficients, result, polynom1.coefficients.Length);
-                for (int i = 0; i < polynom2.coefficients.Length; i++)
-                {
-                    result[i] -= polynom2.coefficients[i];
-                }
+                Polynomial temp = lhs;
+                lhs = rhs;
+                rhs = temp;
             }
-            else
+            double[] result = new double[lhs.coefficients.Length];
+            Array.Copy(lhs.coefficients, result, lhs.coefficients.Length);
+            for (int i = 0; i < rhs.coefficients.Length; i++)
             {
-                result = new double[polynom1.coefficients.Length];
-                Array.Copy(polynom1.coefficients, result, polynom1.coefficients.Length);
-                for (int i = 0; i < polynom2.coefficients.Length; i++)
-                {
-                    result[i] -= polynom2.coefficients[i];
-                }
-
+                result[i] += rhs.coefficients[i];
             }
             return new Polynomial(result);
         }
 
-        public static Polynomial operator *(Polynomial polynom1, Polynomial polynom2)
+        public static Polynomial operator -(Polynomial lhs, Polynomial rhs)
+        {            
+            return lhs + -rhs;
+        }
+
+        public static Polynomial operator *(Polynomial lhs, Polynomial rhs)
         {
-            if (polynom1 == null || polynom2 == null)
+            if (lhs == null || rhs == null)
                 throw new ArgumentNullException();
 
             double[] result = 
-                new double[polynom1.coefficients.Length + polynom2.coefficients.Length - 1];
+                new double[lhs.coefficients.Length + rhs.coefficients.Length - 1];
 
-            for (int i = 0; i < polynom1.coefficients.Length; i++)
+            for (int i = 0; i < lhs.coefficients.Length; i++)
             {
-                for (int j = 0; j < polynom2.coefficients.Length; j++)
+                for (int j = 0; j < rhs.coefficients.Length; j++)
                 {
-                    result[i + j] += polynom1.coefficients[i] * polynom2.coefficients[j];
+                    result[i + j] += lhs.coefficients[i] * rhs.coefficients[j];
                 }
             }
 
@@ -217,19 +218,19 @@ namespace Task1
 
         #endregion
 
-        public static Polynomial Add(Polynomial polynom1, Polynomial polynom2)
+        public static Polynomial Add(Polynomial lhs, Polynomial rhs)
         {
-            return polynom1 + polynom2;
+            return lhs + rhs;
         }
 
-        public static Polynomial Subtract(Polynomial polynom1, Polynomial polynom2)
+        public static Polynomial Subtract(Polynomial lhs, Polynomial rhs)
         {
-            return polynom1 - polynom2;
+            return lhs - rhs;
         }
 
-        public static Polynomial Multiply(Polynomial polynom1, Polynomial polynom2)
+        public static Polynomial Multiply(Polynomial lhs, Polynomial rhs)
         {
-            return polynom1 * polynom2;
+            return lhs * rhs;
         }
     }
 }
