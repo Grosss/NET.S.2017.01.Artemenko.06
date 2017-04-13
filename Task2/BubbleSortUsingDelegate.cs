@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Task2
-{    
-    public static class BubbleSort
+{
+    public static class BubbleSortUsingDelegate
     {
         /// <summary>
         /// Sorts rows by defined order
@@ -20,15 +20,8 @@ namespace Task2
         {
             if (ReferenceEquals(null, jaggedArray) || ReferenceEquals(null, comparator))
                 throw new ArgumentNullException();
-                        
-            for (int i = 0; i < jaggedArray.Length; i++)
-            {
-                for (int j = 0; j < jaggedArray.Length - i - 1; j++)
-                {
-                    if (comparator.Compare(jaggedArray[j], jaggedArray[j + 1]) > 0)
-                        Swap(ref jaggedArray[j], ref jaggedArray[j + 1]);
-                }
-            }
+
+            Sort(jaggedArray, comparator.Compare);
         }
 
         /// <summary>
@@ -44,43 +37,16 @@ namespace Task2
             if (ReferenceEquals(null, jaggedArray) || ReferenceEquals(null, compareDelegate))
                 throw new ArgumentNullException();
 
-            DelegateAdapter compareDelegateAdapter = new DelegateAdapter(compareDelegate);
-
-            Sort(jaggedArray, compareDelegateAdapter);
-        }
-
-        #region Adapter of delegate
-
-        private class DelegateAdapter : IComparer<int[]>
-        {
-            /// <summary>
-            /// delegate hendler
-            /// </summary>
-            private Func<int[], int[], int> compareDelegate;
-
-            /// <summary>
-            /// Constructs delegate adapter
-            /// </summary>
-            /// <param name = "comparer">Delegate method</param>
-            public DelegateAdapter(Func<int[], int[], int> comparer)
+            for (int i = 0; i < jaggedArray.Length; i++)
             {
-                compareDelegate = comparer;
-            }
-
-            /// <summary>
-            /// Compares two rows of jagged array
-            /// </summary>
-            /// <param name = "firstRow"></param>
-            /// <param name = "secondRow"></param>
-            /// <returns>Difference between rows</returns>
-            public int Compare(int[] firstRow, int[] secondRow)
-            {
-                return compareDelegate(firstRow, secondRow);
+                for (int j = 0; j < jaggedArray.Length - i - 1; j++)
+                {
+                    if (compareDelegate(jaggedArray[j], jaggedArray[j + 1]) > 0)
+                        Swap(ref jaggedArray[j], ref jaggedArray[j + 1]);
+                }
             }
         }
-
-        #endregion
-
+        
         #region Private methods
 
         /// <summary>
