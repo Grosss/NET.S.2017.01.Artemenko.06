@@ -39,7 +39,7 @@ namespace Task2
         /// <exception cref="ArgumentNullException">
         /// array or compareDelegate is null
         /// </exception>
-        public static void Sort(int[][] jaggedArray, Func<int[], int[], int> compareDelegate)
+        public static void Sort(int[][] jaggedArray, Comparison<int[]> compareDelegate)
         {
             if (ReferenceEquals(null, jaggedArray) || ReferenceEquals(null, compareDelegate))
                 throw new ArgumentNullException();
@@ -56,13 +56,13 @@ namespace Task2
             /// <summary>
             /// delegate hendler
             /// </summary>
-            private Func<int[], int[], int> compareDelegate;
+            private Comparison<int[]> compareDelegate;
 
             /// <summary>
             /// Constructs delegate adapter
             /// </summary>
             /// <param name = "comparer">Delegate method</param>
-            public DelegateAdapter(Func<int[], int[], int> comparer)
+            public DelegateAdapter(Comparison<int[]> comparer)
             {
                 compareDelegate = comparer;
             }
